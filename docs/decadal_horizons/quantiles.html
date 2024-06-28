@@ -3020,6 +3020,8 @@ vertical-align: -.125em;
 
 </header>
 
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Note interactive() is FALSE when clicking the render button</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">interactive</span>()) {</span>
@@ -3055,34 +3057,23 @@ vertical-align: -.125em;
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(theme_eda)</span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">pd</span>(<span class="st">&#39;src/poc/reports/quantiles_funs.r&#39;</span>))</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Local functions ----</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Local parameters ----</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Files and folders ----</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Initialize database ----#</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Load data ----</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">pd</span>(<span class="st">&#39;src/poc/reports/quantiles_funs.r&#39;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="section" class="level4">
-<h4 class="anchored" data-anchor-id="section">2024-06-26</h4>
+<h4 class="anchored" data-anchor-id="section">2024-06-28</h4>
 </section>
-<section id="examples-usings-peps-data" class="level3">
-<h3 class="anchored" data-anchor-id="examples-usings-peps-data">Examples usings Pep’s data</h3>
+</section>
+<section id="examples-usings-peps-data" class="level2">
+<h2 class="anchored" data-anchor-id="examples-usings-peps-data">Examples usings Pep’s data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Environmental data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Per pep we can just keep years 1982:2014</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>had12 <span class="ot">&lt;-</span> <span class="fu">qread</span>(<span class="fu">pd</span>(<span class="st">&#39;data/pep/had12_ACCESS-ESM1-5_ssp585.qs&#39;</span>))  <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(had12 <span class="ot">&lt;-</span> <span class="fu">qread</span>(<span class="fu">pd</span>(<span class="st">&#39;data/pep/set_original/had12_ACCESS-ESM1-5_ssp585.qs&#39;</span>))  <span class="sc">%&gt;%</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(x,y)) <span class="sc">%&gt;%</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>cell,<span class="at">names_to=</span><span class="st">&#39;year&#39;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="dv">1982</span><span class="sc">:</span><span class="dv">2014</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(value)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cell=</span><span class="fu">as.integer</span>(cell),<span class="at">year=</span><span class="fu">as.integer</span>(year),<span class="at">value=</span><span class="fu">as.integer</span>(value)) <span class="co">#Reduce size in memory</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>had12</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cell=</span><span class="fu">as.integer</span>(cell),<span class="at">year=</span><span class="fu">as.integer</span>(year),<span class="at">value=</span><span class="fu">as.integer</span>(value))) <span class="co">#Reduce size in memory</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8,737,905 × 3
     cell  year value
@@ -3101,97 +3092,158 @@ vertical-align: -.125em;
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#--- Species data</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>spp <span class="ot">&lt;-</span> <span class="fu">qread</span>(<span class="fu">pd</span>(<span class="st">&#39;data/pep/Acacia_quornensis.qs&#39;</span>)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(<span class="st">&#39;cell&#39;</span>) <span class="sc">%&gt;%</span> as.integer</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>spp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>(spp <span class="ot">&lt;-</span> <span class="fu">qread</span>(<span class="fu">pd</span>(<span class="st">&#39;data/pep/set_original/Acacia_quornensis.qs&#39;</span>)) <span class="sc">%&gt;%</span> as_tibble) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 696795 698235 698236 699675 699676 701114 701115 702554 702555 703993
-[11] 705432 705433 706872 706873 706874 708313 708314 709754 711197 712635
-[21] 712637 714077 715517 716956 716957</code></pre>
+<pre><code># A tibble: 25 × 4
+     cell     x     y     n
+    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+ 1 696795  139. -30.9     3
+ 2 698235  139. -31.1     5
+ 3 698236  139. -31.1     1
+ 4 699675  139. -31.4     7
+ 5 699676  139. -31.4     1
+ 6 701114  138. -31.6     2
+ 7 701115  139. -31.6     5
+ 8 702554  138. -31.9    13
+ 9 702555  139. -31.9     1
+10 703993  138. -32.1     8
+# ℹ 15 more rows</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#By detault, gets 95, 99, and 100% quantiles using quantileType=7 over all data (e.g. no grouping)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">almostEveryQuantileEver</span>(spp,had12)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(dat <span class="ot">&lt;-</span> spp <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>x,<span class="sc">-</span>y) <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cell=</span><span class="fu">as.integer</span>(cell)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(had12,<span class="at">by=</span><span class="st">&#39;cell&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cell,year,value,<span class="at">weight=</span>n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 825 × 4
+     cell  year value weight
+    &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+ 1 696795  1982     0      3
+ 2 696795  1983     0      3
+ 3 696795  1984    11      3
+ 4 696795  1985    10      3
+ 5 696795  1986     0      3
+ 6 696795  1987     0      3
+ 7 696795  1988     0      3
+ 8 696795  1989     0      3
+ 9 696795  1990     0      3
+10 696795  1991     0      3
+# ℹ 815 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Sanity check.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(dat<span class="sc">$</span>cell))<span class="sc">==</span><span class="fu">nrow</span>(spp) <span class="co">#TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<section id="thresholds-using-the-quantiles-function" class="level3">
+<h3 class="anchored" data-anchor-id="thresholds-using-the-quantiles-function">Thresholds using the <code>quantiles</code> function</h3>
+<p><code>qfun</code> defaults to <code>&#39;quantiles&#39;</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#By detault, gets 95, 99, and 100% quantiles using quantileType=7 over all data (e.g. no grouping)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">thresholds</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 4
-  group quantileType     q q.val
-  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 none             7  0.95    12
-2 none             7  0.99    12
-3 none             7  1       12</code></pre>
+  group q.type     q q.val
+  &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 none       7  0.95    12
+2 none       7  0.99    12
+3 none       7  1       12</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Same but for quantile types 1 to 5</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">almostEveryQuantileEver</span>(spp,had12,<span class="at">types=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Same but for quantile types 1 to 5</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">thresholds</span>(dat,<span class="at">types=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 15 × 4
-   group quantileType     q q.val
-   &lt;chr&gt;        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1 none             1  0.95    12
- 2 none             1  0.99    12
- 3 none             1  1       12
- 4 none             2  0.95    12
- 5 none             2  0.99    12
- 6 none             2  1       12
- 7 none             3  0.95    12
- 8 none             3  0.99    12
- 9 none             3  1       12
-10 none             4  0.95    12
-11 none             4  0.99    12
-12 none             4  1       12
-13 none             5  0.95    12
-14 none             5  0.99    12
-15 none             5  1       12</code></pre>
+   group q.type     q q.val
+   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 none       1  0.95    12
+ 2 none       1  0.99    12
+ 3 none       1  1       12
+ 4 none       2  0.95    12
+ 5 none       2  0.99    12
+ 6 none       2  1       12
+ 7 none       3  0.95    12
+ 8 none       3  0.99    12
+ 9 none       3  1       12
+10 none       4  0.95    12
+11 none       4  0.99    12
+12 none       4  1       12
+13 none       5  0.95    12
+14 none       5  0.99    12
+15 none       5  1       12</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#25, 50, 75% quantiles</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">almostEveryQuantileEver</span>(spp,had12,<span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#25, 50, 75% quantiles</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">thresholds</span>(dat,<span class="at">probs=</span><span class="fu">c</span>(<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 4
-  group quantileType     q q.val
-  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 none             7  0.25     0
-2 none             7  0.5      1
-3 none             7  0.75    12</code></pre>
+  group q.type     q q.val
+  &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 none       7  0.25     0
+2 none       7  0.5      1
+3 none       7  0.75    12</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#0.95 quantiles over all data (no grouping) and for each year.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">almostEveryQuantileEver</span>(spp,had12,<span class="at">probs=</span><span class="fl">0.95</span>,<span class="at">by=</span><span class="fu">c</span>(<span class="st">&#39;none&#39;</span>,<span class="st">&#39;year&#39;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#0.95 quantiles over all data (no grouping) and for each year.</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">thresholds</span>(dat,<span class="at">probs=</span><span class="fl">0.95</span>,<span class="at">by=</span><span class="fu">c</span>(<span class="st">&#39;none&#39;</span>,<span class="st">&#39;year&#39;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 34 × 5
-   group quantileType     q q.val group_value
-   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;int&gt;
- 1 none             7  0.95    12          NA
- 2 year             7  0.95     0        1982
- 3 year             7  0.95     1        1983
- 4 year             7  0.95    12        1984
- 5 year             7  0.95    10        1985
- 6 year             7  0.95     0        1986
- 7 year             7  0.95     0        1987
- 8 year             7  0.95     0        1988
- 9 year             7  0.95     0        1989
-10 year             7  0.95     0        1990
+   group group.val q.type     q q.val
+   &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 none         NA      7  0.95    12
+ 2 year       1982      7  0.95     0
+ 3 year       1983      7  0.95     1
+ 4 year       1984      7  0.95    12
+ 5 year       1985      7  0.95    10
+ 6 year       1986      7  0.95     0
+ 7 year       1987      7  0.95     0
+ 8 year       1988      7  0.95     0
+ 9 year       1989      7  0.95     0
+10 year       1990      7  0.95     0
 # ℹ 24 more rows</code></pre>
 </div>
 </div>
+</section>
+<section id="thresholds-using-the-weighted.quantiles-function" class="level3">
+<h3 class="anchored" data-anchor-id="thresholds-using-the-weighted.quantiles-function">Thresholds using the <code>weighted.quantiles</code> function</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Warnings ----</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>warns <span class="ot">&lt;-</span> <span class="fu">warnings</span>()</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(warns) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="fu">cat</span>(<span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>); <span class="fu">summary</span>(warns); <span class="fu">cat</span>(<span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>) }</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Git Repo ----</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>repo <span class="ot">&lt;-</span> git2r<span class="sc">::</span><span class="fu">repository</span>(<span class="fu">pd</span>(<span class="st">&#39;src&#39;</span>))</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>gitSha <span class="ot">&lt;-</span> git2r<span class="sc">::</span><span class="fu">sha</span>(git2r<span class="sc">::</span><span class="fu">repository_head</span>(repo)) <span class="sc">%&gt;%</span> <span class="fu">substr</span>(<span class="dv">1</span>,<span class="dv">7</span>)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>rmt <span class="ot">&lt;-</span> git2r<span class="sc">::</span><span class="fu">remotes</span>(repo)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(rmt)) {</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#TODO: need to parse rmt when I have a repo that has a remote</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  shaTxt <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">&#39;[{gitSha}](https://github.com/{rmt}/tree/{gitSha})&#39;</span>)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  shaTxt <span class="ot">&lt;-</span> gitSha</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">thresholds</span>(dat,<span class="at">qfun=</span><span class="st">&#39;weighted.quantile&#39;</span>,<span class="at">probs=</span><span class="fl">0.95</span>,<span class="at">weights=</span>dat<span class="sc">$</span>weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  group q.type     q q.val
+  &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1 none  Type7   0.95    12</code></pre>
 </div>
-<p>Commit when this report was run: <a href="https://github.com/origin/tree/0c9fc35">0c9fc35</a></p>
-<p>2024-06-26 16:54. America/New_York</p>
-<p>7.255 sec elapsed</p>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">thresholds</span>(dat,<span class="at">qfun=</span><span class="st">&#39;weighted.quantile&#39;</span>,<span class="at">probs=</span><span class="fl">0.95</span>,<span class="at">weights=</span>dat<span class="sc">$</span>weight,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">types=</span><span class="fu">c</span>(<span class="st">&#39;Harrell-Davis&#39;</span>,<span class="st">&#39;Type7&#39;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  group q.type            q q.val
+  &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
+1 none  Harrell-Davis  0.95    12
+2 none  Type7          0.95    12</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Warnings ----</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>warns <span class="ot">&lt;-</span> <span class="fu">warnings</span>()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(warns) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="fu">cat</span>(<span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>); <span class="fu">summary</span>(warns); <span class="fu">cat</span>(<span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>) }</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Git Repo ----</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>repo <span class="ot">&lt;-</span> git2r<span class="sc">::</span><span class="fu">repository</span>(<span class="fu">pd</span>(<span class="st">&#39;src&#39;</span>))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>gitSha <span class="ot">&lt;-</span> git2r<span class="sc">::</span><span class="fu">sha</span>(git2r<span class="sc">::</span><span class="fu">repository_head</span>(repo)) <span class="sc">%&gt;%</span> <span class="fu">substr</span>(<span class="dv">1</span>,<span class="dv">7</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>rmt <span class="ot">&lt;-</span> git2r<span class="sc">::</span><span class="fu">remotes</span>(repo)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(rmt)) {</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#TODO: need to parse rmt when I have a repo that has a remote</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  shaTxt <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">&#39;[{gitSha}](https://github.com/{rmt}/tree/{gitSha})&#39;</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  shaTxt <span class="ot">&lt;-</span> gitSha</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Commit when this report was run: <a href="https://github.com/origin/tree/d2d1232">d2d1232</a></p>
+<p>2024-06-28 15:41. America/New_York</p>
+<p>8.281 sec elapsed</p>
+</section>
 </section>
 
 </main>
