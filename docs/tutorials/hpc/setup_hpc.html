@@ -3227,15 +3227,17 @@ shutting down</code></pre>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">AddKeystoAgent</span> yes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Test to make sure it works</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can also use the alias in other commands. e.g.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> myfile.txt storrs:~</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="avoid-typing-your-password-every-time" class="level3">
 <h3 class="anchored" data-anchor-id="avoid-typing-your-password-every-time">Avoid typing your password every time</h3>
 <p>Typing your password every time to log in also gets annoying. You can avoid this by installing the public key on your local machine on to storrs.</p>
 <p>Assuming you set up the <code>storrs</code> host alias above, just add the key to your keychain and copy it to the hpc. It will ask you for your password but this should be for the last time.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> <span class="at">--apple-use-keychain</span> ~/.ssh/id_rsa</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ssh-copy-id</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> <span class="at">--apple-use-keychain</span> ~/.ssh/id_rsa</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ssh-copy-id</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now when you connect to the hpc you won’t need to supply your password</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>TODO</p>
 <ul>
 <li>Calling slurm directly from the command line and passing script parameters</li>
@@ -3247,7 +3249,7 @@ shutting down</code></pre>
 <section id="run-simple-commands-directly-from-a-local-shell" class="level3">
 <h3 class="anchored" data-anchor-id="run-simple-commands-directly-from-a-local-shell">Run simple commands directly from a local shell</h3>
 <p>You don’t need to connect to the ssh just to execute a simple command like creating a directory. Intead, you can use the <code>ssh</code> command to excecute commands on the hpc without being deposited into a remote shell.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs <span class="st">&quot;mkdir -p ~/test&quot;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs <span class="st">&quot;mkdir -p ~/test&quot;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You will receive the following message but I have confirmed with hpc support that you can disregard it.</p>
 <p><code>/etc/profile.d/slurm.sh: line 28: sjobs: command not found</code></p>
 <p>The error is related to a script that usually runs when you log into the hpc. Since you are not logging into an interactive shell, the script fails. The important point is that your command will have executed successfully.</p>
