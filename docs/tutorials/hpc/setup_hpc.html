@@ -3127,32 +3127,33 @@ Note
 <h2 class="anchored" data-anchor-id="test-mpi">Test MPI</h2>
 <p>There are many ways to use the HPC. I use MPI following Steve Weston, the author of the <code>doMPI</code> package, the O’Reilly book <a href="https://www.oreilly.com/library/view/parallel-r/9781449317850/">Parallel R</a>, a founder of Revolution Analytics, and an administrator of Yale’s HPC. However, you don’t need to use MPI to use the HPC; many other approaches are perfectly reasonable for the typical scenarios in R scripts in ecology.</p>
 <p>You will normally submit batch jobs using SLURM, but you should first run scripts interactively to test them. To test interactively, first create a small script to test MPI. Then, request interactive nodes to run the script.</p>
-<p>Put this R script somewhere that you can execute it. If you didn’t set <code>.libPaths()</code> in <code>.Rprofile</code>, you need to add it to the script. Note I’m calling <code>Rscript</code> using the <code>#!</code> operator.</p>
-<p>This script uses three tasks to compute the square root of the task number. Call the script <code>test_dompi.r</code></p>
-<p><code>test_dompi.r</code></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env Rscript</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doMPI)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">startMPIcluster</span>(<span class="at">verbose=</span><span class="cn">TRUE</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoMPI</span>(cl)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%dopar%</span> {</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(i)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">closeCluster</span>(cl)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mpi.quit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This script uses three tasks to compute the square root of the task number. Call the script <code>test_dompi.r</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doMPI)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">startMPIcluster</span>(<span class="at">verbose=</span><span class="cn">TRUE</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoMPI</span>(cl)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%dopar%</span> {</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(i)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">closeCluster</span>(cl)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mpi.quit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="test-interactively" class="level3">
 <h3 class="anchored" data-anchor-id="test-interactively">Test interactively</h3>
 <p>Request four interactive tasks in the debug queue. The script uses three tasks, but you need to request four because the master process requires one task.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-n</span> 4 <span class="at">-p</span> debug <span class="at">--pty</span> bash</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Once you’ve been deposited into the interactive nodes, load the modules and request mpi to run the script. Again, you have to tell mpi to use four tasks.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload gcc</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gdal/3.8.4 cuda/11.6 r/4.4.0</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 R <span class="at">--slave</span> <span class="at">-f</span> test_dompi.r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload gcc</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gdal/3.8.4 cuda/11.6 r/4.4.0</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">R_LIBS</span><span class="op">=</span>~/rlibs</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> 4 Rscript <span class="at">--vanilla</span> test_dompi.r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>After a slight pause, you should see package loading messages and then the output of a list that has the square root of the task number.</p>
 <pre><code>Loading required package: foreach
 Loading required package: foreach
@@ -3196,20 +3197,53 @@ shutting down</code></pre>
 <section id="test-using-slurm" class="level3">
 <h3 class="anchored" data-anchor-id="test-using-slurm">Test using SLURM</h3>
 <p>To run an mpi script using slurm, you create a small script that sets parameters then calls your parallel script. You can call slurm directly from the command line (see advanced section) but this is a bit more advanced so calling mpi through a slurm script is usually how tutorials introduce slurm. Call the script <code>test_dompi_slurm.sh</code></p>
-<p><code>test_dompi_slurm.sh</code></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -p debug</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -n 4</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload gcc</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gdal/3.8.4 cuda/11.6 r/4.4.0</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> test_dompi.r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -p debug</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH -n 4</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload gcc</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gdal/3.8.4 cuda/11.6 r/4.4.0</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">R_LIBS</span><span class="op">=</span>~/rlibs</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> Rscript <span class="at">--vanilla</span> test_dompi.r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This script is essentially the same as the <code>mpirun</code> call above, except you use <code>#SBATCH</code> commands to set <code>-p</code> and <code>-n</code> parameters.</p>
 <p>Call the script using <code>sbatch</code></p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> test_dompi_slurm.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The script should run after a short pause. You can check your place in the queue using <code>squeue --me</code></p>
 <p>This time, the script-level output is directed to <code>slurm-*.log</code>. The task-level output is again sent to individual <code>MPI*.log</code> files.</p>
+</section>
+<section id="slurm-with-command-line-arguments" class="level3">
+<h3 class="anchored" data-anchor-id="slurm-with-command-line-arguments">SLURM with command line arguments</h3>
+<p>Changing parameter values in a slurm script means editing the script itself, which make it hard to have a record of what parameter values you used in the past and adds extra friction to trying new values. It would be better to have the ability to supply values to a slurm job directly from the command line. Here is a method for acheiving this functionality.</p>
+<p>You still need a basic slurm script, but note the lack of (most) SBATCH commands and the presence of shell variables. Call the script <code>test_dompi_slurm.sh</code></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --error=myscript.log</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=myscript.log</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload gcc</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load gdal/3.8.4 cuda/11.6 r/4.4.0</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">R_LIBS</span><span class="op">=</span>~/rlibs</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="ex">mpirun</span> <span class="at">-n</span> <span class="va">$n</span> Rscript <span class="at">--vanilla</span> test_dompi.r <span class="va">$script_par1</span> <span class="va">$script_par2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This script does not set the usual slurm variables like the number of requested tasks or the partition. With this template in place, you can control most parameters from the command line.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Script variables - these could be arguments for your r script</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">script_par1</span><span class="op">=</span><span class="st">&#39;myvalue1&#39;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">script_par2</span><span class="op">=</span><span class="st">&#39;myvalue2&#39;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Slurm variables. You normally set these (and others) by editing the slurm script.</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">n</span><span class="op">=</span>4</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">p</span><span class="op">=</span>debug</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">mail</span><span class="op">=</span>NONE</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># These have to start with the --option b/c echo won&#39;t print - as first character.</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="va">pars</span><span class="op">=</span><span class="kw">`</span><span class="bu">echo</span> <span class="at">--ntasks</span> <span class="va">$n</span> <span class="at">-p</span> <span class="va">$p</span> <span class="at">--mail-type</span> <span class="va">$mail</span><span class="kw">`</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="va">exp</span><span class="op">=</span><span class="kw">`</span><span class="bu">echo</span> <span class="at">--export</span><span class="op">=</span>ALL,n=<span class="va">$n</span>,p=<span class="va">$p</span>,mail=<span class="va">$mail</span><span class="kw">`</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Call the slurm script but use the variables defined at the command line.</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> <span class="va">$pars</span> <span class="va">$exp</span> test_dompi_slurm.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="advanced-configuration" class="level2">
@@ -3218,26 +3252,26 @@ shutting down</code></pre>
 <h3 class="anchored" data-anchor-id="make-an-hostname-alias">Make an hostname alias</h3>
 <p>It becomes tedious to type <code>ssh &lt;netid&gt;@login.storrs.hpc.uconn.edu</code> every time you want to connect with the hpc. You can set up ssh so you can instead type <code>ssh storrs</code> to log in.</p>
 <p>Just edit your <code>config</code> file and add the following. Replace <netid> with your netid.</netid></p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">vim</span> ~/.ssh/config</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Host</span> storrs</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">HostName</span> login.storrs.hpc.uconn.edu</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">User</span> <span class="op">&lt;</span>netid<span class="op">&gt;</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">UseKeychain</span> yes</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">AddKeystoAgent</span> yes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">vim</span> ~/.ssh/config</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Host</span> storrs</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">HostName</span> login.storrs.hpc.uconn.edu</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">User</span> <span class="op">&lt;</span>netid<span class="op">&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">UseKeychain</span> yes</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">AddKeystoAgent</span> yes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Test to make sure it works</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You can also use the alias in other commands. e.g.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> myfile.txt storrs:~</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> myfile.txt storrs:~</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="avoid-typing-your-password-every-time" class="level3">
 <h3 class="anchored" data-anchor-id="avoid-typing-your-password-every-time">Avoid typing your password every time</h3>
 <p>Typing your password every time to log in also gets annoying. You can avoid this by installing the public key on your local machine on to storrs.</p>
 <p>Assuming you set up the <code>storrs</code> host alias above, just add the key to your keychain and copy it to the hpc. It will ask you for your password but this should be for the last time.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> <span class="at">--apple-use-keychain</span> ~/.ssh/id_rsa</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ssh-copy-id</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> <span class="at">--apple-use-keychain</span> ~/.ssh/id_rsa</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ssh-copy-id</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now when you connect to the hpc you won’t need to supply your password</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>TODO</p>
 <ul>
 <li>Calling slurm directly from the command line and passing script parameters</li>
@@ -3249,10 +3283,14 @@ shutting down</code></pre>
 <section id="run-simple-commands-directly-from-a-local-shell" class="level3">
 <h3 class="anchored" data-anchor-id="run-simple-commands-directly-from-a-local-shell">Run simple commands directly from a local shell</h3>
 <p>You don’t need to connect to the ssh just to execute a simple command like creating a directory. Intead, you can use the <code>ssh</code> command to excecute commands on the hpc without being deposited into a remote shell.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs <span class="st">&quot;mkdir -p ~/test&quot;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> storrs <span class="st">&quot;mkdir -p ~/test&quot;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You will receive the following message but I have confirmed with hpc support that you can disregard it.</p>
 <p><code>/etc/profile.d/slurm.sh: line 28: sjobs: command not found</code></p>
 <p>The error is related to a script that usually runs when you log into the hpc. Since you are not logging into an interactive shell, the script fails. The important point is that your command will have executed successfully.</p>
+</section>
+<section id="spatrasters" class="level3">
+<h3 class="anchored" data-anchor-id="spatrasters">SpatRasters</h3>
+<p><code>SpatRaster</code> objects are not exportable. This means you need to load all <code>SpatRasters</code> within the <code>foreach</code> loop. If you don’t do this, you will receive an error. See this stack exchange <a href="https://stackoverflow.com/questions/67445883/terra-package-returns-error-when-try-to-run-parallel-operations/67449818#67449818">response</a>.</p>
 <p>TODO</p>
 <ul>
 <li>Code sharing/github setup</li>
